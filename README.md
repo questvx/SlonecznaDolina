@@ -88,3 +88,7 @@ The desktop build uses electron-builder. The configuration defines a Windows ins
 ## Security
 
 Provide JWT secrets and database credentials locally through environment variables or private development configuration. Do not commit `.env` files containing real secrets.
+
+## Preview photos:
+<img width="1889" height="979" alt="image" src="https://github.com/user-attachments/assets/c28f0bfb-7b24-4b9f-8c82-4eb365d341e1" />
+
