@@ -1,63 +1,63 @@
 # Sloneczna Dolina
 
-Aplikacja desktopowa wspierająca codzienną obsługę ośrodka narciarskiego. Łączy panel pracownika z backendem REST, aby w jednym miejscu zarządzać sprzedażą, wypożyczalnią, instruktorami i organizacją pracy ośrodka.
+A desktop application for the day-to-day operations of a ski resort. It brings staff workflows for sales, equipment rentals, ski school services, instructors, and resort scheduling into one place.
 
-Repozytorium zawiera **kompletne rozwiązanie**: aplikację desktopową oraz serwer API. Nie jest to sam frontend.
+This repository contains the **complete solution**: a desktop application and its REST API backend, not just a frontend.
 
-## Co potrafi aplikacja
+## Features
 
-- Rejestruje sprzedaż karnetów, usług szkółki i sprzętu z wypożyczalni.
-- Udostępnia obsługę kont i uwierzytelnianie użytkowników z tokenami JWT.
-- Organizuje instruktorów, wydarzenia oraz harmonogram pracy.
-- Przechowuje dane operacyjne w relacyjnej bazie MySQL; migracje schematu obsługuje Flyway.
-- Uruchamia panel jako aplikację desktopową Electron, a nie tylko stronę w przeglądarce.
+- Records sales of lift passes, ski school lessons, and rental equipment.
+- Supports user accounts and JWT-based authentication.
+- Organizes instructors, events, and work schedules.
+- Stores operational data in a MySQL relational database, with schema migrations managed by Flyway.
+- Runs the staff interface as an Electron desktop application.
 
-## Architektura i stack
+## Architecture and tech stack
 
-| Obszar | Technologie |
+| Area | Technologies |
 | --- | --- |
-| Aplikacja desktopowa | Electron 30, React 18, TypeScript, Vite, React Router |
-| Backend REST | Java 21, Spring Boot 3.5, Spring Web, Spring Security, JWT |
-| Dane i migracje | Spring Data JPA, MySQL, Flyway |
-| Jakość i dokumentacja API | Maven, JUnit/Spring Boot Test, Springdoc OpenAPI |
+| Desktop application | Electron 30, React 18, TypeScript, Vite, React Router |
+| REST API | Java 21, Spring Boot 3.5, Spring Web, Spring Security, JWT |
+| Data and migrations | Spring Data JPA, MySQL, Flyway |
+| Testing and API documentation | Maven, JUnit/Spring Boot Test, Springdoc OpenAPI |
 
-Frontend komunikuje się z backendem przez HTTP. W lokalnym trybie developerskim integracja oczekuje API pod `http://localhost:8080`.
+The frontend communicates with the backend over HTTP. In local development, it expects the API at `http://localhost:8080`.
 
-## Struktura repozytorium
+## Repository structure
 
 ```text
 .
-├── SlonecznaDolina/        # aplikacja Electron + React
-│   ├── electron/           # proces główny i preload Electron
-│   └── src/                # interfejs oraz widoki domenowe
-└── slonecznadolinaBackend/ # API Spring Boot, baza i migracje
+├── SlonecznaDolina/         # Electron + React desktop application
+│   ├── electron/            # Electron main process and preload script
+│   └── src/                 # UI and domain views
+└── slonecznadolinaBackend/  # Spring Boot API, database integration, migrations
     └── src/main/resources/db/migration/
 ```
 
-## Wymagania
+## Prerequisites
 
-- Node.js 18 lub nowszy oraz npm
+- Node.js 18 or later and npm
 - JDK 21
-- MySQL uruchomiony lokalnie lub dostępny pod wskazanym adresem
+- A local or otherwise accessible MySQL instance
 
-## Uruchomienie lokalne
+## Run locally
 
-### 1. Skonfiguruj bazę i backend
+### 1. Configure the database and start the backend
 
-Utwórz lokalną bazę MySQL i skonfiguruj połączenie oraz sekret JWT w konfiguracji backendu (`slonecznadolinaBackend/src/main/resources/application.yaml` lub przez zmienne środowiskowe Spring). Nie zapisuj prawdziwych haseł ani sekretów w repozytorium.
+Create a MySQL database and configure the database connection and JWT secret in the backend configuration (`slonecznadolinaBackend/src/main/resources/application.yaml` or through Spring environment variables). Do not commit real passwords or secrets.
 
-W terminalu, z katalogu głównego repozytorium:
+From the repository root, start the backend:
 
 ```powershell
 cd slonecznadolinaBackend
 ./mvnw.cmd spring-boot:run
 ```
 
-Backend domyślnie udostępnia API na porcie `8080`. Interaktywna dokumentacja OpenAPI jest dostępna pod `http://localhost:8080/swagger-ui/index.html`.
+The backend serves the API on port `8080` by default. Interactive OpenAPI documentation is available at `http://localhost:8080/swagger-ui/index.html`.
 
-### 2. Uruchom aplikację desktopową
+### 2. Start the desktop application
 
-W drugim terminalu, z katalogu głównego repozytorium:
+In a second terminal, from the repository root:
 
 ```powershell
 cd SlonecznaDolina
@@ -65,26 +65,26 @@ npm install
 npm run dev
 ```
 
-Tryb developerski uruchamia Vite wraz z procesem Electron. Pozostaw backend i MySQL włączone podczas korzystania z funkcji wymagających API.
+Development mode starts Vite alongside the Electron process. Keep the backend and MySQL running when using features that require the API.
 
-## Budowanie i sprawdzanie
+## Build and checks
 
-Backend, z katalogu `slonecznadolinaBackend`:
+Backend commands, run from `slonecznadolinaBackend`:
 
 ```powershell
 ./mvnw.cmd test
 ./mvnw.cmd package
 ```
 
-Frontend i aplikacja desktopowa, z katalogu `SlonecznaDolina`:
+Frontend and desktop application commands, run from `SlonecznaDolina`:
 
 ```powershell
 npm run lint
 npm run build
 ```
 
-Budowanie aplikacji desktopowej korzysta z electron-builder. Konfiguracja definiuje instalator Windows, obraz DMG dla macOS oraz AppImage dla Linuksa.
+The desktop build uses electron-builder. The configuration defines a Windows installer, a macOS DMG, and a Linux AppImage.
 
-## Bezpieczeństwo
+## Security
 
-Sekrety JWT oraz dane dostępowe do bazy powinny być dostarczane lokalnie przez zmienne środowiskowe lub prywatną konfigurację developerską. Nie dodawaj plików `.env` z rzeczywistymi sekretami do commitów.
+Provide JWT secrets and database credentials locally through environment variables or private development configuration. Do not commit `.env` files containing real secrets.
